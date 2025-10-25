@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes - AI Historical Story Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .story-card {
+            background: #f8f9fa;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .btn-generate {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .result-section {
+            display: none;
+        }
+        .media-link {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4">🎭 Echoes</h1>
+            <p class="lead">AI-Powered Historical Story Generator</p>
+            <p class="text-muted">Transform any historical topic into an engaging multimodal experience</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form id="storyForm">
+                    <div class="mb-3">
+                        <label for="topic" class="form-label">📚 Enter a Historical Topic</label>
+                        <input type="text" class="form-control form-control-lg" id="topic" name="topic"
+                               placeholder="e.g., The Fall of the Berlin Wall, Ancient Egyptian Pyramids, World War II D-Day"
+                               required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg btn-generate">
+                            🚀 Generate Story
+                        </button>
+                    </div>
+                </form>
+
+                <div class="loading" id="loading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">🤖 Generating your story with AI... This may take a moment.</p>
+                </div>
+
+                <div class="result-section" id="results">
+                    <hr>
+                    <h3 class="text-center mb-4">📖 Your Generated Story</h3>
+
+                    <div class="card story-card">
+                        <div class="card-header">
+                            <h5>📋 Research Brief</h5>
+                        </div>
+                        <div class="card-body">
+                            <pre id="brief" class="text-muted"></pre>
+                        </div>
+                    </div>
+
+                    <div class="card story-card">
+                        <div class="card-header">
+                            <h5>📖 Story Narrative</h5>
+                        </div>
+                        <div class="card-body">
+                            <pre id="story" class="text-dark"></pre>
+                        </div>
+                    </div>
+
+                    <div class="card story-card">
+                        <div class="card-header">
+                            <h5>❓ Frequently Asked Questions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="faq"></div>
+                        </div>
+                    </div>
+
+                    <div class="card story-card">
+                        <div class="card-header">
+                            <h5>🔗 Media Files</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="media"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-secondary" onclick="resetForm()">🔄 Generate Another Story</button>
+                        <button class="btn btn-success ms-2" onclick="downloadStory()">💾 Download JSON</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let storyData = null;
+
+        document.getElementById('storyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const topic = document.getElementById('topic').value.trim();
+            if (!topic) return;
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/story', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ topic: topic })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                storyData = await response.json();
+                displayResults(storyData);
+
+            } catch (error) {
+                alert('❌ Error generating story: ' + error.message);
+                console.error('Error:', error);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function displayResults(data) {
+            document.getElementById('brief').textContent = data.brief;
+            document.getElementById('story').textContent = data.story;
+
+            // Display FAQ
+            const faqDiv = document.getElementById('faq');
+            faqDiv.innerHTML = '';
+            data.faq.forEach((item, index) => {
+                const qaDiv = document.createElement('div');
+                qaDiv.className = 'mb-3';
+                qaDiv.innerHTML = `<strong>${index + 1}. ${item}</strong>`;
+                faqDiv.appendChild(qaDiv);
+            });
+
+            // Display media
+            const mediaDiv = document.getElementById('media');
+            mediaDiv.innerHTML = `
+                <div class="media-link">🎵 <a href="${data.audio_url}" target="_blank">Listen to Audio Narration</a></div>
+                <div class="media-link">🎬 <a href="${data.video_url}" target="_blank">Watch Video Animation</a></div>
+            `;
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function resetForm() {
+            document.getElementById('topic').value = '';
+            document.getElementById('results').style.display = 'none';
+            storyData = null;
+        }
+
+        function downloadStory() {
+            if (!storyData) return;
+
+            const dataStr = JSON.stringify(storyData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+            const exportFileDefaultName = `story_${storyData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+    </script>
+</body>
+</html>
