@@ -77,7 +77,7 @@ def main():
 
     # --- Configuration ---
     model = "sora-2-pro"
-    prompt = "Make a video of a real person that looks like the person in the image in a teams call. He should be looking into the camera for a few seconds and then start talking. He should wear clothes from the time of 247 before Christ."
+    prompt = "Can you make the person in the image alive. He should be looking into the camera for a few seconds and then start talking. He should wear clothes from the time of 250 before Christ. He should be a real person."
     size = "720x1280"
     seconds = 8
     image_path = Path("input_images/photo.jpg")
