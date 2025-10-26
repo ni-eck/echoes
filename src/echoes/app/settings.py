@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     openai_api_key: str
     openai_model: str = "gpt-4o"
     project_name: str = "Echoes"
+    azure_openai_endpoint: str = ""
+    azure_openai_api_key: str = ""
 
 # Singleton settings instance
 settings = Settings()
