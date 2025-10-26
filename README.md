@@ -2,26 +2,27 @@
 
 An AI-powered historical interactive learning platform that transforms user queries into multimodal experiences: research briefs, narrative stories, FAQs, audio, and video.
 
-## 🌐 Live Demo
-
-Try the live demo: **[https://talk-to-past.lovable.app/](https://talk-to-past.lovable.app/)**
-
 ## ✨ Features
 
+### ✅ Currently Working
 - **🤖 Multi-Agent AI Pipeline**: Uses OpenAI Agents SDK with specialized agents for research, storytelling, and Q&A
-- **🌐 Modern React Frontend**: Beautiful, responsive single-page application built with React 18, TypeScript, and Tailwind CSS
-- **💻 Command Line Tool**: Simple CLI for programmatic use
+- **💻 Command Line Tool**: Interactive CLI for generating historical stories
 - **🔌 REST API**: Full FastAPI backend with interactive documentation
-- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
 - **🎵 Media Generation**: Mocked TTS and video services (ready for real API integration)
-- **🚀 Automated Launchers**: One-click startup scripts for development and production
+- **📄 JSON Export**: Save generated content to files
+
+### 🔄 Under Development
+- **� React Frontend**: Modern web interface with chat and video player
+- **📱 Responsive Design**: Mobile-friendly interface
+- **🚀 Automated Launchers**: One-click startup scripts for web interface
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - **Python 3.8+** with pip
-- **Node.js 18+** and npm (for frontend development)
 - **OpenAI API Key** with access to GPT-4o
+
+**Note**: Currently, only the CLI tool (`python ./main.py`) is fully functional. The web frontend is under development.
 
 ### 1. Environment Setup
 ```powershell
@@ -35,11 +36,6 @@ python -m venv .venv
 
 # Install Python dependencies
 pip install -r requirements.txt
-
-# Install Node.js dependencies (for frontend development)
-cd frontend
-npm install
-cd ..
 ```
 
 ### 2. Configure API Key
@@ -54,60 +50,37 @@ OPENAI_MODEL=gpt-4o
 
 ### 3. Run the Application
 
-#### 🚀 Automated Launcher (Recommended)
+#### CLI Tool (Currently Working)
 ```powershell
-# Start both backend and frontend automatically
-.\launch_echoes.ps1
-
-# Or use Python directly
-python start_with_browser.py
+python ./main.py
 ```
-This will:
-- Start the FastAPI backend on `http://127.0.0.1:8000`
-- Start the React dev server on `http://localhost:3000`
-- Open your browser to the React frontend automatically
 
-#### Manual Startup
+This will start an interactive CLI that allows you to:
+- Enter historical topics
+- Generate AI-powered stories with research, narratives, and FAQs
+- Save results to JSON files
 
-**Full-Stack Development:**
-```powershell
-# Terminal 1: Start FastAPI backend
-cd src
-python -m uvicorn echoes.app.main:app --reload --host 127.0.0.1 --port 8000
-
-# Terminal 2: Start React frontend
-cd frontend
-npm run dev
-```
-Then open **http://localhost:3000** in your browser!
-
-**Backend Only:**
-```powershell
-cd src
-python -m uvicorn echoes.app.main:app --reload --host 127.0.0.1 --port 8000
-```
-Then open **http://127.0.0.1:8000** in your browser (serves built React frontend).
-
-**Command Line Tool:**
-```powershell
-python main.py
-```
+#### Web Interface (Under Development)
+The web frontend is currently under development. Automated launchers and web interface will be available in future updates.
 
 ## 📖 Usage
 
-### Web Interface
-1. Open the application URL (automatically opened by launcher)
-2. Enter any historical topic (e.g., "The moon landing", "Ancient Rome", "Cleopatra")
-3. Click "🚀 Generate Story" or select from featured topics
-4. Explore the interactive experience:
-   - 📋 **Research Brief**: Historical facts and context
-   - 📖 **Story**: Engaging narrative with scene descriptions
-   - ❓ **FAQ**: Interactive Q&A about the topic
-   - 🎵 **Audio**: Generated narration (currently mocked)
-   - 🎬 **Video**: Historical animation (currently mocked)
-   - 💬 **Chat**: Ask follow-up questions to AI agents
+### CLI Tool
+1. Run `python ./main.py`
+2. Enter any historical topic when prompted (e.g., "The moon landing", "Ancient Rome")
+3. The AI will generate:
+   - 📋 **Research Brief**: Historical facts and timeline
+   - 📖 **Story**: Engaging narrative (60-120 seconds worth)
+   - ❓ **FAQs**: Related questions and answers
+   - 🔗 **Media URLs**: Audio and video links (currently mocked)
+4. Optionally save the results to a JSON file
 
-### API Endpoints
+### Web Interface (Coming Soon)
+The interactive web interface with chat, video player, and discussion panels is under development.
+
+### API Endpoints (Programmatic Use)
+
+The FastAPI backend provides REST endpoints for programmatic integration:
 
 #### Generate Story
 ```bash
@@ -146,7 +119,7 @@ curl -X POST "http://127.0.0.1:8000/api/chat" \
 ```
 
 ### API Documentation
-Visit **http://127.0.0.1:8000/docs** for interactive Swagger UI documentation.
+Visit **http://127.0.0.1:8000/docs** for interactive Swagger UI documentation (when server is running).
 
 ## 🧪 Testing
 
