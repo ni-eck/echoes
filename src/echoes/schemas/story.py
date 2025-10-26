@@ -12,6 +12,7 @@ class StoryResponse(BaseModel):
     topic: str
     brief: str
     story: str
+    system_prompt: str
     faq: Union[List[str], str]  # Allow list or stringified JSON
     audio_url: str
     video_url: str
