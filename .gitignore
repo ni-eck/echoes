@@ -26,6 +26,13 @@ wheels/
 *.egg
 MANIFEST
 
+.DS_Store
+*.pem
+*.webp
+*.mp4
+*.mov
+*.mp3
+
 # Virtual environments
 .venv/
 venv/
